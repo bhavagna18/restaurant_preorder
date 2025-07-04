@@ -1,0 +1,14 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Order Placed{% endblock %}
+
+{% block content %}
+<h1>Thank You!</h1>
+<p>Your order has been placed successfully.</p>
+<p>Order ID: {{ order.id }}</p>
+<a href="{% url 'menu' %}">Back to Menu</a>
+
+<script>
+    localStorage.removeItem('cart');  // clear cart after order
+</script>
+{% endblock %}

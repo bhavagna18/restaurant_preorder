@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Restaurant{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'orders/styles.css' %}">
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'menu' %}">Menu</a>
+    <a href="{% url 'checkout' %}">Checkout</a>
+    <a href="{% url 'order_list' %}">Admin Orders</a>
+    <a href="{% url 'cart' %}">Cart</a>
+
+</nav>
+{% comment %} {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'order_list' %}">Admin Orders</a>
+{% endif %} {% endcomment %}
+
+<hr>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

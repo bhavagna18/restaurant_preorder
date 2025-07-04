@@ -1,0 +1,15 @@
+{% extends 'orders/base.html' %}
+{% block title %}Order Queue{% endblock %}
+
+{% block content %}
+<h1>Order Queue</h1>
+
+<h2>🕐 Pending Orders</h2>
+{% include 'orders/order_table.html' with orders=pending_orders %}
+
+<h2>✅ Ready Orders</h2>
+{% include 'orders/order_table.html' with orders=ready_orders %}
+
+<h2>✔️ Completed Orders</h2>
+{% include 'orders/order_table.html' with orders=completed_orders %}
+{% endblock %}

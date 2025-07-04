@@ -1,0 +1,10 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Restaurant Pre-Order App</h1>
+<p>Order your food in advance and skip the wait at the restaurant!</p>
+
+<a href="{% url 'menu' %}" class="btn">View Menu & Order Now</a>
+{% endblock %}
