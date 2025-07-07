@@ -1,1 +1,1 @@
-Initial commit
+Configure project for Render deployment: add requirements.txt, render.yaml, and update settings.py
