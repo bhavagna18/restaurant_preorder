@@ -1,5 +1,5 @@
 import json
-from twilio.rest import Client
+# from twilio.rest import Client
 from .utils import send_order_email
 
 from django.shortcuts import render, redirect, get_object_or_404
