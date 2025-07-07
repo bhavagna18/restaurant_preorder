@@ -1,0 +1,35 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+<h1>Menu</h1>
+<div class="menu-grid">
+    {% for item in menu_items %}
+        <div class="menu-item">
+            {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="menu-img">
+
+            {% endif %}
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+            <p><strong>₹{{ item.price }}</strong></p>
+            <button onclick="addToCart({{ item.id }}, '{{ item.name }}', {{ item.price }})">Add to Cart</button>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    function addToCart(id, name, price) {
+        let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const index = cart.findIndex(item => item.id === id);
+        if (index >= 0) {
+            cart[index].quantity += 1;
+        } else {
+            cart.push({ id, name, price, quantity: 1 });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert(`${name} added to cart`);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,40 @@
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Pickup Time</th>
+        <th>Status</th>
+        <th>Items</th>
+        <th>Update</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.customer_name }}</td>
+        <td>{{ order.phone }}</td>
+        <td>{{ order.pickup_time }}</td>
+        <td>{{ order.status }}</td>
+        <td>
+            <ul>
+                {% for item in order.items.all %}
+                    <li>{{ item.menu_item.name }} x {{ item.quantity }}</li>
+                {% endfor %}
+            </ul>
+        </td>
+        <td>
+            <form method="post" action="{% url 'update_order_status' order.id %}">
+                {% csrf_token %}
+                <select name="status">
+                    <option value="Pending" {% if order.status == "Pending" %}selected{% endif %}>Pending</option>
+                    <option value="Ready" {% if order.status == "Ready" %}selected{% endif %}>Ready</option>
+                    <option value="Completed" {% if order.status == "Completed" %}selected{% endif %}>Completed</option>
+                </select>
+                <button type="submit">Update</button>
+            </form>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7">No orders in this queue.</td></tr>
+    {% endfor %}
+</table>

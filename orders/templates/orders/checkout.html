@@ -1,0 +1,45 @@
+{% extends 'orders/base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<h1>Checkout</h1>
+
+<div id="cart-display"></div>
+
+<form method="post" action="{% url 'checkout' %}">
+    {% csrf_token %}
+    <input type="hidden" name="order_data" id="order_data">
+
+    <label>Name:</label><br>
+    <input type="text" name="customer_name" required><br><br>
+
+    <label>Phone:</label><br>
+    <input type="text" name="phone" required><br><br>
+
+    <label>Pickup Time:</label><br>
+    <input type="datetime-local" name="pickup_time" required><br><br>
+    
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <button type="submit">Place Order</button>
+</form>
+
+<script>
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    if (cart.length === 0) {
+        document.getElementById("cart-display").innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+        let html = "<ul>";
+        cart.forEach(item => {
+            html += `<li>${item.name} x ${item.quantity} - ₹${item.price * item.quantity}</li>`;
+        });
+        html += "</ul>";
+        document.getElementById("cart-display").innerHTML = html;
+    }
+
+    document.getElementById("order_data").value = JSON.stringify(cart);
+</script>
+{% endblock %}
