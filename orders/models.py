@@ -17,8 +17,6 @@ class Order(models.Model):
         ('READY', 'Ready'),
         ('COMPLETED', 'Completed'),
     ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
-
     customer_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     pickup_time = models.DateTimeField()

@@ -1,4 +1,6 @@
 import json
+from django.conf import settings
+from twilio.rest import Client
 # from twilio.rest import Client
 from .utils import send_order_email
 
@@ -6,9 +8,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.dateparse import parse_datetime
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from .models import Order, OrderItem, MenuItem
 
 # ---------- Public Views ----------
@@ -22,12 +21,9 @@ def menu(request):
 
 def cart(request):
     return render(request, 'orders/cart.html')
-def send_sms(to_number, name, order_id, ready=False):
-    account_sid = 'YOUR_TWILIO_ACCOUNT_SID'
-    auth_token = 'YOUR_TWILIO_AUTH_TOKEN'
-    twilio_number = 'YOUR_TWILIO_PHONE_NUMBER'
 
-    client = Client(account_sid, auth_token)
+def send_sms(to_number, name, order_id, ready=False):
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
     # Correct message based on status
     if ready:
@@ -37,8 +33,8 @@ def send_sms(to_number, name, order_id, ready=False):
 
     client.messages.create(
         body=message,
-        from_=twilio_number,
-        to=f'+919848793897'
+        from_=settings.TWILIO_PHONE_NUMBER,
+        to='+919848793897'
     )
 
         

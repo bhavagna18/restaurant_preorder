@@ -4,8 +4,9 @@ services:
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: |
-      python manage.py migrate
-      sleep 5
+      set -e
+      python manage.py migrate --noinput
+      python manage.py collectstatic --noinput
       gunicorn restaurant_preorder.wsgi
 
 
