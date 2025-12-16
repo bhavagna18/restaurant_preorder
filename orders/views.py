@@ -1,33 +1,24 @@
 import json
-from twilio.rest import Client
-from .utils import send_order_email
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.dateparse import parse_datetime
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponseBadRequest
 from .models import Order, OrderItem, MenuItem
+from .utils import send_order_email, send_order_ready_email, send_order_completed_email
 
-# ---------- Public Views ----------
 
 def home(request):
     return render(request, 'orders/home.html')
+
 
 def menu(request):
     items = MenuItem.objects.all()
     return render(request, 'orders/menu.html', {'menu_items': items})
 
+
 def cart(request):
     return render(request, 'orders/cart.html')
-
-
-
-
-        
-
 
 @csrf_exempt
 def checkout(request):
@@ -38,15 +29,17 @@ def checkout(request):
         cart_json = request.POST.get('order_data')
         email = request.POST.get('email')
 
-        # ✅ 1. Create the Order
+        if not all([name, phone, pickup_time, cart_json, email]):
+            return HttpResponseBadRequest("Missing required fields.")
+
         order = Order.objects.create(
             customer_name=name,
             phone=phone,
+            email=email,
             pickup_time=pickup_time,
             status='Pending'
         )
 
-        # ✅ 2. Add Order Items
         try:
             items = json.loads(cart_json)
             for item in items:
@@ -58,19 +51,12 @@ def checkout(request):
                 )
         except Exception as e:
             print("❌ Item saving failed:", e)
-
-        # ✅ 3. Send SMS here
-        try:
-            send_sms(phone, name, order.id)
-        except Exception as e:
-            print("❌ SMS failed:", e)
-
+            return HttpResponseBadRequest("Invalid cart data.")
 
         try:
             send_order_email(email, name, order.id)
         except Exception as e:
             print("❌ Email failed:", e)
-
 
         return render(request, 'orders/thank_you.html', {'order': order})
 
@@ -97,14 +83,14 @@ def update_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     if request.method == 'POST':
         new_status = request.POST.get('status')
-        order.status = new_status
-        order.save()
+        if new_status:
+            order.status = new_status
+            order.save()
 
-        # ✅ Send SMS if marked as READY
-        if new_status.upper() == 'READY':
-            try:
-                send_sms(order.phone, order.customer_name, order.id, ready=True)
-            except Exception as e:
-                print("❌ SMS (READY) failed:", e)
+            # Send email based on status
+            if new_status == 'Ready':
+                send_order_ready_email(order.email, order.customer_name, order.id)
+            elif new_status == 'Completed':
+                send_order_completed_email(order.email, order.customer_name, order.id)
 
     return redirect('order_list')

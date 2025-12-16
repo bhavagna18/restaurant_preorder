@@ -11,3 +11,27 @@ def send_order_email(to_email, name, order_id):
         [to_email],
         fail_silently=False
     )
+
+def send_order_ready_email(to_email, name, order_id):
+    subject = f"Your Order #{order_id} is Ready!"
+    message = f"Hi {name},\n\nYour order #{order_id} is now ready for pickup.\n\n- Your Restaurant"
+    
+    send_mail(
+        subject,
+        message,
+        None,
+        [to_email],
+        fail_silently=False
+    )
+
+def send_order_completed_email(to_email, name, order_id):
+    subject = f"Your Order #{order_id} is Completed!"
+    message = f"Hi {name},\n\nThanks for picking up your order #{order_id}.\nWe hope you enjoy your meal!\n\n- Your Restaurant"
+    
+    send_mail(
+        subject,
+        message,
+        None,
+        [to_email],
+        fail_silently=False
+    )

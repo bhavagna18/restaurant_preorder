@@ -13,16 +13,16 @@ class MenuItem(models.Model):
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('READY', 'Ready'),
-        ('COMPLETED', 'Completed'),
+        ('Pending', 'Pending'),
+        ('Ready', 'Ready'),
+        ('Completed', 'Completed'),
     ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
 
     customer_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
+    email = models.EmailField(blank=True, null=True)
     pickup_time = models.DateTimeField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
