@@ -1,0 +1,3 @@
+literal:account_sid = 'ACb9f68527c0b596e6edc29ec7032e9628'==>account_sid = 'REDACTED_SID'
+literal:auth_token = '4xxxtfxxxxxxxx'==>auth_token = 'REDACTED_TOKEN'
+literal:twilio_number = '+xxxxxxx'==>twilio_number = 'REDACTED_NUMBER'
